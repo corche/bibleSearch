@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@font-face {
+	font-family: "MaruBuriSemiBold";
+	src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.eot);
+	src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.eot?#iefix)
+			format("embedded-opentype"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff2)
+			format("woff2"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.woff)
+			format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-SemiBold.ttf)
+			format("truetype");
+}
+
+@font-face {
+	font-family: "MaruBuriBold";
+	src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.eot);
+	src: url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.eot?#iefix)
+			format("embedded-opentype"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2)
+			format("woff2"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff)
+			format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.ttf)
+			format("truetype");
+}
+
+@theme {
+	--font-maru-semi: "MaruBuriSemiBold", sans-serif;
+	--font-maru-bold: "MaruBuriBold", sans-serif;
+}
+
+@layer base {
+	body {
+		@apply bg-[#87CBB8] text-neutral-900 font-medium font-maru-semi select-none;
+	}
+}
