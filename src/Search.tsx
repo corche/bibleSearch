@@ -9,75 +9,6 @@ type BibleEntry = {
 };
 
 export default function Search() {
-	const _성경: { [key: string]: { short: string; p: number } } = {
-		창세기: { short: "창", p: 50 },
-		출애굽기: { short: "출", p: 40 },
-		레위기: { short: "레", p: 27 },
-		민수기: { short: "민", p: 36 },
-		신명기: { short: "신", p: 34 },
-		여호수아: { short: "수", p: 24 },
-		사사기: { short: "삿", p: 21 },
-		룻기: { short: "룻", p: 4 },
-		사무엘상: { short: "삼상", p: 31 },
-		사무엘하: { short: "삼하", p: 24 },
-		열왕기상: { short: "왕상", p: 22 },
-		열왕기하: { short: "왕하", p: 25 },
-		역대상: { short: "대상", p: 29 },
-		역대하: { short: "대하", p: 36 },
-		에스라: { short: "스", p: 10 },
-		느헤미야: { short: "느", p: 13 },
-		에스더: { short: "에", p: 10 },
-		욥기: { short: "욥", p: 42 },
-		시편: { short: "시", p: 150 },
-		잠언: { short: "잠", p: 31 },
-		전도서: { short: "전", p: 12 },
-		아가: { short: "아", p: 8 },
-		이사야: { short: "사", p: 66 },
-		예레미야: { short: "렘", p: 52 },
-		예레미야애가: { short: "애", p: 5 },
-		에스겔: { short: "겔", p: 48 },
-		다니엘: { short: "단", p: 12 },
-		호세아: { short: "호", p: 14 },
-		요엘: { short: "욜", p: 3 },
-		아모스: { short: "암", p: 9 },
-		오바댜: { short: "옵", p: 1 },
-		요나: { short: "욘", p: 4 },
-		미가: { short: "미", p: 7 },
-		나훔: { short: "나", p: 3 },
-		하박국: { short: "합", p: 3 },
-		스바냐: { short: "습", p: 3 },
-		학개: { short: "학", p: 2 },
-		스가랴: { short: "슥", p: 14 },
-		말라기: { short: "말", p: 4 },
-		마태복음: { short: "마", p: 28 },
-		마가복음: { short: "막", p: 16 },
-		누가복음: { short: "눅", p: 24 },
-		요한복음: { short: "요", p: 21 },
-		사도행전: { short: "행", p: 28 },
-		로마서: { short: "롬", p: 16 },
-		고린도전서: { short: "고전", p: 16 },
-		고린도후서: { short: "고후", p: 13 },
-		갈라디아서: { short: "갈", p: 6 },
-		에베소서: { short: "엡", p: 6 }, // 오타 수정
-		빌립보서: { short: "빌", p: 4 },
-		골로세서: { short: "골", p: 4 },
-		데살로니가전서: { short: "살전", p: 5 },
-		데살로니가후서: { short: "살후", p: 3 },
-		디모데전서: { short: "딤전", p: 6 },
-		디모데후서: { short: "딤후", p: 4 },
-		디도서: { short: "디", p: 3 },
-		빌레몬서: { short: "몬", p: 1 },
-		히브리서: { short: "히", p: 13 },
-		야고보서: { short: "약", p: 5 },
-		베드로전서: { short: "벧전", p: 5 },
-		베드로후서: { short: "벧후", p: 3 },
-		요한일서: { short: "요일", p: 5 },
-		요한이서: { short: "요이", p: 1 },
-		요한삼서: { short: "요삼", p: 1 },
-		유다서: { short: "유", p: 1 },
-		요한계시록: { short: "계", p: 22 },
-	};
-
 	const [성경, set성경] = useState("");
 	const [장, set장] = useState(0);
 	const [시작절, set시작절] = useState(0);
@@ -87,40 +18,11 @@ export default function Search() {
 	const textRef = useRef<HTMLDivElement>(null);
 
 	const 찾기 = () => {
+		console.log(`${성경}${장}${시작절}${끝절}${canFind}`);
+		console.log("asdf");
 		if (!canFind) return;
 
-		const json = _성경[성경]?.short || 성경;
-		console.log(json);
 		set결과([]);
-
-		const list: BibleEntry[] = [];
-
-		for (let i = 장; i <= 장; i++) {
-			for (let j = 시작절; j <= 끝절; j++) {
-				const value = {
-					index: `${j}`,
-					value: bible[`${json}${i}:${j}`],
-				};
-
-				if (!value.value) {
-					if (value.value !== "" && value.value !== undefined) {
-						toast.error("성경 구절이 잘못 입력되었습니다.");
-						break;
-					} else {
-						continue;
-					}
-				}
-
-				list.push(value);
-			}
-		}
-
-		console.log(list);
-		set결과(list);
-
-		if (list.length > 0) {
-			toast.success("성경 구절을 찾았습니다.");
-		}
 	};
 
 	useEffect(() => {
