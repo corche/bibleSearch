@@ -1,14 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import bibleData from "./bible.json";
-const bible = bibleData as Record<string, string>;
 import toast, { Toaster } from "react-hot-toast";
 
-type BibleEntry = {
-	index: string;
-	value: string;
-	number?: string;
-	text?: string;
+type Verse = {
+	number: string;
+	text: string;
 };
+
+type Chapter = {
+	number: string;
+	verses: Verse[];
+};
+
+type Book = {
+	number: string;
+	name: string;
+	abbreviation: string;
+	chapters: Chapter[];
+};
+
+type BibleVersion = {
+	name: string;
+	metadata: { copyright: string };
+	books: Book[];
+};
+
+const bible = (bibleData as Array<string | BibleVersion>).find(
+	(entry): entry is BibleVersion =>
+		typeof entry === "object" && entry !== null && "books" in entry
+);
+
+type BibleEntry = Verse;
 
 export default function Search() {
 	const [성경, set성경] = useState("");
@@ -20,29 +42,39 @@ export default function Search() {
 	const textRef = useRef<HTMLDivElement>(null);
 
 	const 찾기 = () => {
-		console.log(`${성경}${장}${시작절}${끝절}${canFind}`);
-		console.log("asdf");
 		if (!canFind) return;
 		set결과([]);
 
-		const bibleContent =
-			typeof bible === "object" ? Object.values(bible)[1] : null;
-		const book =
-			bibleContent &&
-			(bibleContent as any)["books"]?.find(
-				(b: any) => b.name === 성경 || b.abbreviation === 성경,
-			);
+		if (!bible) {
+			toast.error("성경 데이터를 불러오지 못했습니다.");
+			return;
+		}
 
-		if (book === undefined) {
+		const book = bible.books.find(
+			(item) => item.name === 성경 || item.abbreviation === 성경,
+		);
+
+		if (!book) {
 			toast.error("성경 구절이 존재하지 않습니다.");
 			return;
 		}
-		set결과(book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1));
 
-		if (
-			book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1)
-				.length > 0
-		) {
+		const chapter = book.chapters.find(
+			(item) => Number(item.number) === Number(장),
+		);
+
+		if (!chapter) {
+			toast.error("성경 구절이 존재하지 않습니다.");
+			return;
+		}
+
+		const verses = chapter.verses.filter((verse) => {
+			const verseNumber = Number(verse.number);
+			return verseNumber >= 시작절 && verseNumber <= 끝절;
+		});
+
+		if (verses.length > 0) {
+			set결과(verses);
 			toast.success("성경 구절을 찾았습니다.");
 		} else {
 			toast.error("성경 구절이 존재하지 않습니다.");

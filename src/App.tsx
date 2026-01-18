@@ -1,7 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import bibleData from "./bible.json";
-const bible = bibleData as Record<string, string>;
 import toast, { Toaster } from "react-hot-toast";
+
+type Verse = {
+	number: string;
+	text: string;
+};
+
+type Chapter = {
+	number: string;
+	verses: Verse[];
+};
+
+type Book = {
+	number: string;
+	name: string;
+	abbreviation: string;
+	chapters: Chapter[];
+};
+
+type BibleVersion = {
+	name: string;
+	metadata: { copyright: string };
+	books: Book[];
+};
+
+const bible = (bibleData as Array<string | BibleVersion>).find(
+	(entry): entry is BibleVersion =>
+		typeof entry === "object" && entry !== null && "books" in entry
+);
 
 type BibleEntry = {
 	index: string;
@@ -99,33 +126,50 @@ export default function App() {
 	const 찾기 = () => {
 		if (!canFind) return;
 
-		const json = _성경[성경]?.short || 성경;
-		console.log(json);
-		set결과([]);
-
-		const list: BibleEntry[] = [];
-
-		for (let i = 장; i <= 장; i++) {
-			for (let j = 시작절; j <= 끝절; j++) {
-				const value = {
-					index: `${j}`,
-					value: bible[`${json}${i}:${j}`],
-				};
-
-				if (!value.value) {
-					if (value.value !== "" && value.value !== undefined) {
-						toast.error("성경 구절이 잘못 입력되었습니다.");
-						break;
-					} else {
-						continue;
-					}
-				}
-
-				list.push(value);
-			}
+		if (!bible) {
+			toast.error("성경 데이터를 불러오지 못했습니다.");
+			return;
 		}
 
-		console.log(list);
+		const targetAbbreviation = _성경[성경]?.short || 성경;
+		const book = bible.books.find(
+			(item) =>
+				item.name === 성경 ||
+				item.abbreviation === 성경 ||
+				item.abbreviation === targetAbbreviation
+		);
+
+		if (!book) {
+			toast.error("성경 구절이 존재하지 않습니다.");
+			return;
+		}
+
+		const chapter = book.chapters.find(
+			(item) => Number(item.number) === Number(장)
+		);
+
+		if (!chapter) {
+			toast.error("성경 구절이 존재하지 않습니다.");
+			return;
+		}
+
+		const verses = chapter.verses.filter((verse) => {
+			const verseNumber = Number(verse.number);
+			return verseNumber >= 시작절 && verseNumber <= 끝절;
+		});
+
+		set결과([]);
+
+		if (verses.length === 0) {
+			toast.error("성경 구절이 존재하지 않습니다.");
+			return;
+		}
+
+		const list: BibleEntry[] = verses.map((verse) => ({
+			index: verse.number,
+			value: verse.text,
+		}));
+
 		set결과(list);
 
 		if (list.length > 0) {
