@@ -6,6 +6,8 @@ import toast, { Toaster } from "react-hot-toast";
 type BibleEntry = {
 	index: string;
 	value: string;
+	number?: string;
+	text?: string;
 };
 
 export default function Search() {
@@ -21,14 +23,25 @@ export default function Search() {
 		console.log(`${성경}${장}${시작절}${끝절}${canFind}`);
 		console.log("asdf");
 		if (!canFind) return;
-
 		set결과([]);
+
+		const bibleContent =
+			typeof bible === "object" ? Object.values(bible)[1] : null;
+		const book =
+			bibleContent &&
+			(bibleContent as any)["books"]?.find(
+				(b: any) => b.name === 성경 || b.abbreviation === 성경,
+			);
+		set결과(book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1));
+		console.log(
+			book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1),
+		);
 	};
 
 	useEffect(() => {
 		set성경((prev) => prev.trim());
 		setCanFind(
-			성경.trim() !== "" && 장 !== 0 && 시작절 !== 0 && 끝절 !== 0
+			성경.trim() !== "" && 장 !== 0 && 시작절 !== 0 && 끝절 !== 0,
 		);
 	}, [성경, 장, 시작절, 끝절]);
 
@@ -117,22 +130,22 @@ export default function Search() {
 					ref={textRef}
 				>
 					<div className="mt-4 list-decimal">
-						<ol
-							type="1"
-							start={parseInt(결과[0].index || "1")}
-							className="list-decimal"
-						>
-							{결과.map((item, index_) => (
-								<li
-									key={`${item}${index_}`}
-									className="list-item"
-								>{`${item.value}`}</li>
-							))}
-						</ol>
+						{결과.map((item, index_) => (
+							<div key={`${item["number"]}${index_}`}>
+								<div>{`${item["number"]}.  ${item["text"]}`}</div>
+								{/* <ol
+									type="1"
+									start={parseInt(item["number"] || "1")}
+									className="list-decimal"
+								>
+									<li className="list-item">{`${item["text"]}`}</li>
+								</ol> */}
+							</div>
+						))}
 					</div>
 				</div>
 			)}
-			<div className="text-xs text-neutral-300 mt-50 pointer-events-none">
+			<div className="text-xs text-neutral-200 mt-50 mb-30 pointer-events-none">
 				Powered by Woojin.
 			</div>
 		</div>
