@@ -32,10 +32,21 @@ export default function Search() {
 			(bibleContent as any)["books"]?.find(
 				(b: any) => b.name === 성경 || b.abbreviation === 성경,
 			);
+
+		if (book === undefined) {
+			toast.error("성경 구절이 존재하지 않습니다.");
+			return;
+		}
 		set결과(book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1));
-		console.log(
-			book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1),
-		);
+
+		if (
+			book["chapters"][장 - 1]["verses"].slice(시작절 - 1, 끝절 - 1)
+				.length > 0
+		) {
+			toast.success("성경 구절을 찾았습니다.");
+		} else {
+			toast.error("성경 구절이 존재하지 않습니다.");
+		}
 	};
 
 	useEffect(() => {
